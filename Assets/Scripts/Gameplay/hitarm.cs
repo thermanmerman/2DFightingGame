@@ -8,7 +8,6 @@ public class hitarm : MonoBehaviour
     public float hitforce;
     //public Player2Controller controller;
     public int damage = 5; 
-    public GameObject player;
     
     // Start is called before the first frame update
     void Start()

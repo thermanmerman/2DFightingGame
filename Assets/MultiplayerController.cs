@@ -24,13 +24,14 @@ public class MultiplayerController : NetworkBehaviour
     public LayerMask ground;
     private GameObject weaponHolder;
     [SerializeField] List<GameObject> weapons = new List<GameObject>();
-    private List<Transform> weaponTransforms = new List<Transform>();
-    public float offset = 1f;
+
+    private float offset = 0.2f;
     
 
     [Space]
     [Header("Static values")]
     [SerializeField] private float movement = new float();
+    private Vector3 holderScale;
 
     private PlayerControls Controls
     {
@@ -62,7 +63,8 @@ public class MultiplayerController : NetworkBehaviour
         startScale = transform.localScale;
 
         weaponHolder = GameObject.Find("WeaponHolder");
-        armObj = GameObject.FindWithTag("Weapon");
+        holderScale = weaponHolder.transform.localScale;
+        armObj = weaponHolder.transform.GetChild(0).gameObject;
         armObj.SetActive(false);
 
         //attack.armObj = armObj;
@@ -70,8 +72,12 @@ public class MultiplayerController : NetworkBehaviour
         for (int i = 0; i < weaponHolder.transform.childCount; i++)
         {
             weapons.Add(weaponHolder.transform.GetChild(i).gameObject);
-            weaponTransforms.Add(weapons[i].transform);
+            //weaponHolder.transform.GetChild(i).gameObject.transform.SetParent(this.transform);
         }
+
+        armObj.transform.localPosition = Vector3.zero;
+
+        //armObj.transform.SetParent(this.transform);
         
     }
 
@@ -81,7 +87,30 @@ public class MultiplayerController : NetworkBehaviour
     [Client]
     private void Update()
     {
+        
+
         if(!hasAuthority) { return; }
+
+
+        //Weapon positions and scale changes to follow the player
+        Vector3 position = this.transform.position;
+        Vector3 size = this.transform.localScale;
+
+        if (size.x < 0)
+        {
+            weaponHolder.transform.localScale = new Vector3(-holderScale.x, holderScale.y, holderScale.z);
+
+            weaponHolder.transform.position = new Vector3(position.x - offset, position.y + 0.05f, position.z);
+        }
+        else
+        {
+            weaponHolder.transform.localScale = holderScale;
+
+            weaponHolder.transform.position = new Vector3(position.x + offset, position.y + 0.05f, position.z);
+        }
+
+        
+
 
         if (movement < 0) //If moving left
         {
@@ -142,6 +171,7 @@ public class MultiplayerController : NetworkBehaviour
         }
     }
 
+    [Client]
     private void LightAttack()
     {
         if (!hasAuthority) { return; }
@@ -184,38 +214,29 @@ public class MultiplayerController : NetworkBehaviour
         if (enabled)
         {
 
-            weapons[obj].transform.SetParent(this.transform);
-            weapons[obj].transform.localPosition = Vector3.zero;
+            //weapons[obj].transform.localPosition = Vector3.zero;
 
-            Vector3 pos = weapons[obj].transform.localPosition;
+            //Vector3 pos = weapons[obj].transform.localPosition;
+            Vector3 scale = weapons[obj].transform.localScale;
 
             if (transform.localScale.x > 0)
             {
-                weapons[obj].transform.localPosition = new Vector3(pos.x + offset, pos.y + 0.1f, pos.z);
-                Vector3 scale = weapons[obj].transform.localScale;
-                if (scale.y > 0)
-                {
-                    scale.y *= -1;
-                }
-                weapons[obj].transform.localScale = new Vector3(scale.x, -scale.y, scale.z);
+                //weapons[obj].transform.position = new Vector3(pos.x + offset, pos.y + 0.1f, pos.z);  
+
+                scale.x = 0 + scale.x;
+                weapons[obj].transform.localScale = scale;              
             }
             else if (transform.localScale.x < 0)
             {
-                Vector3 scale = weapons[obj].transform.localScale;
-                if (scale.y < 0)
-                {
-                    scale.y *= -1;
-                }
-                weapons[obj].transform.localScale = new Vector3(scale.x, -scale.y, scale.z);
-                weapons[obj].transform.localPosition = new Vector3(pos.x + offset, pos.y + 0.1f, pos.z);
+                //weapons[obj].transform.position = new Vector3(pos.x + offset, pos.y + 0.1f, pos.z);
+                
+                scale.x = 0 - scale.x;
+                weapons[obj].transform.localScale = scale;
             }
         }
         else
         {
-            weapons[obj].transform.SetParent(weaponHolder.transform);
-            weapons[obj].transform.localScale = weaponTransforms[obj].localScale;
-            weapons[obj].transform.localPosition = Vector3.zero;
-            weapons[obj].transform.rotation = weaponTransforms[obj].rotation;
+            //weapons[obj].transform.localPosition = Vector3.zero;
         }
     }
 

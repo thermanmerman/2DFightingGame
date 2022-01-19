@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\Gameplay\cart.cs" />
      <Compile Include="Assets\Packages\VLights\Scripts\Util\GenerateNoiseTexture.cs" />
      <Compile Include="Assets\Scripts\Gameplay\hit2arm.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Attacks.cs" />
      <Compile Include="Assets\Scripts\UI\MainMenu.cs" />
      <Compile Include="Assets\Packages\HardLight2D\Demo\DemoScripts\MeshCopy.cs" />
      <Compile Include="Assets\Scripts\Gameplay\hitfoot.cs" />
@@ -78,7 +79,7 @@
      <Compile Include="Assets\Packages\VLights\Scripts\VLight\VLight.cs" />
      <Compile Include="Assets\Scripts\Gameplay\hit2foot.cs" />
      <Compile Include="Assets\Packages\EffectExamples\Shared\Scripts\GunAim.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Attacks.cs" />
+     <Compile Include="Assets\CanvasHUD.cs" />
      <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\Packages\HardLight2D\ReadMe - FAQ.txt" />
      <None Include="Assets\Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
