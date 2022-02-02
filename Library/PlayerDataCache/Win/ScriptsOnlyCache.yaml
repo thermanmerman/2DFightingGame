@@ -17,6 +17,8 @@ ScriptsOnlyBuild:
     Mirror.Components.dll:
     - Mirror.NetworkTransform
     - Mirror.NetworkTransformChild
+    Mirror.Editor.dll:
+    - Mirror.NetworkBehaviourInspector
     Mirror.dll:
     - Mirror.NetworkIdentity
     - Mirror.NetworkManager
@@ -1209,7 +1211,7 @@ ScriptsOnlyBuild:
     className: hit2arm
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: 14817e5182a8de375e794ef50a07b1d8
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Attacks
@@ -2103,7 +2105,7 @@ ScriptsOnlyBuild:
     className: DistanceInterestManagement
   - hash:
       serializedVersion: 2
-      Hash: b7337e9003179e3b76c9fb42432f81bf
+      Hash: 1a6be63165bf3440d18b08ec16f0bb0a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MultiplayerController

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2849314755084897101}
   - component: {fileID: 2849314755084897111}
   - component: {fileID: 2849314755084897107}
-  - component: {fileID: -8609671128421684060}
+  - component: {fileID: -6227603890611969174}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -247,9 +247,9 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 64
-  weapons: []
-  offset: 1
+  opponentObj: {fileID: 7151074524298502016, guid: d4fe6b6db6cd156428dfecb2877e4532, type: 3}
   movement: 0
+  weapons: []
 --- !u!114 &2849314755084897107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   number: 0
   sprite: {fileID: 2849314755084897098}
---- !u!114 &-8609671128421684060
+--- !u!114 &-6227603890611969174
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -278,3 +278,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  Player: {fileID: 2849314755084897139}
+  cont: {fileID: 2849314755084897111}

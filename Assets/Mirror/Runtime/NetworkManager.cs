@@ -142,6 +142,20 @@ namespace Mirror
                 Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
                 spawnPrefabs.Remove(playerPrefab);
             }
+
+
+            if (player2Prefab != null && player2Prefab.GetComponent<NetworkIdentity>() == null)
+            {
+                Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
+                player2Prefab = null;
+            }
+
+            // This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
+            if (player2Prefab != null && spawnPrefabs.Contains(player2Prefab))
+            {
+                Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
+                spawnPrefabs.Remove(player2Prefab);
+            }
         }
 
         // virtual so that inheriting classes' Reset() can call base.Reset() too
@@ -1141,13 +1155,13 @@ namespace Mirror
         {
             //Debug.Log("NetworkManager.OnServerAddPlayer");
 
-            if (autoCreatePlayer && playerPrefab == null)
+            if (autoCreatePlayer && playerPrefab == null || autoCreatePlayer && player2Prefab == null)
             {
                 Debug.LogError("The PlayerPrefab is empty on the NetworkManager. Please setup a PlayerPrefab object.");
                 return;
             }
 
-            if (autoCreatePlayer && playerPrefab.GetComponent<NetworkIdentity>() == null)
+            if (autoCreatePlayer && playerPrefab.GetComponent<NetworkIdentity>() == null || autoCreatePlayer && player2Prefab.GetComponent<NetworkIdentity>() == null)
             {
                 Debug.LogError("The PlayerPrefab does not have a NetworkIdentity. Please add a NetworkIdentity to the player prefab.");
                 return;

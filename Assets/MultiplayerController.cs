@@ -3,6 +3,7 @@ using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class MultiplayerController : NetworkBehaviour
 {
     //Private stuff
@@ -10,6 +11,10 @@ public class MultiplayerController : NetworkBehaviour
     private Rigidbody2D rb;
     private Vector3 startScale;
     private GameObject armObj;
+    private float offset = 0.2f;
+    private Vector3 holderScale;
+    private GameObject weaponHolder;
+    private Attacks attacks;
 
     [Header("Booleans")]
     public bool canAttack = true;
@@ -22,16 +27,14 @@ public class MultiplayerController : NetworkBehaviour
     public float distance = 0.16f;
     public int jumpStrength = 4;
     public LayerMask ground;
-    private GameObject weaponHolder;
-    [SerializeField] List<GameObject> weapons = new List<GameObject>();
-
-    private float offset = 0.2f;
+    public GameObject opponentObj;
     
 
     [Space]
     [Header("Static values")]
     [SerializeField] private float movement = new float();
-    private Vector3 holderScale;
+    [SerializeField] List<GameObject> weapons = new List<GameObject>();
+    
 
     private PlayerControls Controls
     {
@@ -58,26 +61,25 @@ public class MultiplayerController : NetworkBehaviour
     [Client]
     void Start()
     {
+        if (!hasAuthority) { return; }
+
         rb = GetComponent<Rigidbody2D>();
 
         startScale = transform.localScale;
 
-        weaponHolder = GameObject.Find("WeaponHolder");
-        holderScale = weaponHolder.transform.localScale;
-        armObj = weaponHolder.transform.GetChild(0).gameObject;
-        armObj.SetActive(false);
-
-        //attack.armObj = armObj;
-
-        for (int i = 0; i < weaponHolder.transform.childCount; i++)
+        attacks = GetComponent<Attacks>();
+        attacks.init();
+        
+        /*
+        if (isServer)
         {
-            weapons.Add(weaponHolder.transform.GetChild(i).gameObject);
-            //weaponHolder.transform.GetChild(i).gameObject.transform.SetParent(this.transform);
+            attacks.isServer = true;
         }
-
-        armObj.transform.localPosition = Vector3.zero;
-
-        //armObj.transform.SetParent(this.transform);
+        else
+        {
+            attacks.isServer = false;
+        }
+        */
         
     }
 
@@ -87,30 +89,25 @@ public class MultiplayerController : NetworkBehaviour
     [Client]
     private void Update()
     {
-        
-
         if(!hasAuthority) { return; }
 
-
-        //Weapon positions and scale changes to follow the player
-        Vector3 position = this.transform.position;
-        Vector3 size = this.transform.localScale;
-
-        if (size.x < 0)
+        if (isServer) //This is just so that it doesn't enter the other if/else thing. I could use the connectionId but it wasn't working very well
         {
-            weaponHolder.transform.localScale = new Vector3(-holderScale.x, holderScale.y, holderScale.z);
-
-            weaponHolder.transform.position = new Vector3(position.x - offset, position.y + 0.05f, position.z);
+            if (isServer)
+            {
+                attacks.RpcHolder();
+            }
+            else
+            {
+                attacks.CmdHolder();
+            }
         }
         else
         {
-            weaponHolder.transform.localScale = holderScale;
-
-            weaponHolder.transform.position = new Vector3(position.x + offset, position.y + 0.05f, position.z);
+            //two player stuff
+            //probably the same but i gotta figure it out later and i dont want to deal with the errors rn
         }
-
         
-
 
         if (movement < 0) //If moving left
         {
@@ -176,90 +173,40 @@ public class MultiplayerController : NetworkBehaviour
     {
         if (!hasAuthority) { return; }
         
-        //Attacks.melee melee;
         if (movement == 0 && isGrounded && !crouching && canAttack) //Small punch
         {
-            canAttack = false;
-            if (isServer)
-            {
-                RpcObject(0, true);
-            }
-            else
-            {
-                CmdObject(0, true);
-            }
-            //melee = Attacks.melee.arm;
-            Debug.Log("bruh1");
-            //attack.enableObjects(melee);
-            StartCoroutine(disableObj(0.21f, 0));
-            StartCoroutine(canattack(0.21f));
+            attacks.lightPunch();
         }
         else
         {
-            //melee = Attacks.melee.none;
-        }
-    }
-
-    [Command]
-    void CmdObject(int obj, bool enabled)
-    {
-        RpcObject(obj, enabled);
-    }
-
-    [ClientRpc]
-    void RpcObject(int obj, bool enabled)
-    {
-        weapons[obj].SetActive(enabled);
-
-        if (enabled)
-        {
-
-            //weapons[obj].transform.localPosition = Vector3.zero;
-
-            //Vector3 pos = weapons[obj].transform.localPosition;
-            Vector3 scale = weapons[obj].transform.localScale;
-
-            if (transform.localScale.x > 0)
-            {
-                //weapons[obj].transform.position = new Vector3(pos.x + offset, pos.y + 0.1f, pos.z);  
-
-                scale.x = 0 + scale.x;
-                weapons[obj].transform.localScale = scale;              
-            }
-            else if (transform.localScale.x < 0)
-            {
-                //weapons[obj].transform.position = new Vector3(pos.x + offset, pos.y + 0.1f, pos.z);
-                
-                scale.x = 0 - scale.x;
-                weapons[obj].transform.localScale = scale;
-            }
-        }
-        else
-        {
-            //weapons[obj].transform.localPosition = Vector3.zero;
+            //Other attacks
         }
     }
 
     [Client]
-    private IEnumerator disableObj(float time, int obj)
+    public IEnumerator disableObj(float time, GameObject obj)
     {
         yield return new WaitForSeconds(time);
         
         if (isServer)
         {
-            RpcObject(obj, false);
+            attacks.RpcObj(obj, false);
         }
         else
         {
-            CmdObject(obj, false);
+            attacks.CmdObj(obj, false);
         }
         
     }
-    IEnumerator canattack(float time)
+
+    [Client]
+    public IEnumerator canattack(float time)
     {
         yield return new WaitForSeconds(time);
         canAttack = true;
     }
+
+   
     
     
 }

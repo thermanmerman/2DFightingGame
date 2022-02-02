@@ -65,8 +65,9 @@ GameObject:
   - component: {fileID: 4574978136152238934}
   - component: {fileID: 1381938007617311106}
   - component: {fileID: 8008501401177082667}
-  - component: {fileID: 9161362615074599536}
   - component: {fileID: 3015448016664994742}
+  - component: {fileID: 3048065998031851908}
+  - component: {fileID: -2078247652203059565}
   m_Layer: 0
   m_Name: NetworkPlayer2
   m_TagString: Player
@@ -241,31 +242,6 @@ PolygonCollider2D:
       - {x: -0.5, y: -0.5}
       - {x: 0.5, y: -0.5}
       - {x: 0.5, y: 0.5}
---- !u!114 &9161362615074599536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7151074524298502016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9d652e687fb6740b5a4bc42b2ee54f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  movement: 0
-  isGrounded: 0
-  movementSpeed: 2
-  ground:
-    serializedVersion: 2
-    m_Bits: 64
-  distance: 0.17
-  jumpStrength: 4
-  crouching: 0
-  canAttack: 1
-  arm: {fileID: 0}
 --- !u!114 &3015448016664994742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +256,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   number: 0
   sprite: {fileID: 1958523091177028656}
+--- !u!114 &3048065998031851908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7151074524298502016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f9d652e687fb6740b5a4bc42b2ee54f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  canAttack: 1
+  isGrounded: 0
+  crouching: 0
+  movementSpeed: 2
+  distance: 0.17
+  jumpStrength: 4
+  ground:
+    serializedVersion: 2
+    m_Bits: 64
+  opponentObj: {fileID: 2849314755084897139, guid: 3e563506a4f78344b84cb076e7ae1735, type: 3}
+  movement: 0
+  weapons: []
+--- !u!114 &-2078247652203059565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7151074524298502016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28276b5d60f9b7e4e888117041d8ac52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  Player: {fileID: 7151074524298502016}
+  cont: {fileID: 3048065998031851908}
 --- !u!1001 &777126805040763755
 PrefabInstance:
   m_ObjectHideFlags: 0
