@@ -298,6 +298,7 @@ MonoBehaviour:
   syncInterval: 0.1
   Player: {fileID: 7151074524298502016}
   cont: {fileID: 3048065998031851908}
+  weaponHolderPrefab: {fileID: 7065167888743798864, guid: b7bf7c27cee3ca341ab4abb8010f062f, type: 3}
 --- !u!1001 &777126805040763755
 PrefabInstance:
   m_ObjectHideFlags: 0

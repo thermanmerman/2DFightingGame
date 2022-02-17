@@ -62,7 +62,6 @@ public class MultiplayerController : NetworkBehaviour
     void Start()
     {
         if (!hasAuthority) { return; }
-
         rb = GetComponent<Rigidbody2D>();
 
         startScale = transform.localScale;
@@ -90,25 +89,7 @@ public class MultiplayerController : NetworkBehaviour
     private void Update()
     {
         if(!hasAuthority) { return; }
-
-        if (isServer) //This is just so that it doesn't enter the other if/else thing. I could use the connectionId but it wasn't working very well
-        {
-            if (isServer)
-            {
-                attacks.RpcHolder();
-            }
-            else
-            {
-                attacks.CmdHolder();
-            }
-        }
-        else
-        {
-            //two player stuff
-            //probably the same but i gotta figure it out later and i dont want to deal with the errors rn
-        }
         
-
         if (movement < 0) //If moving left
         {
             //transform.localScale = new Vector3(-0.200599998f, 0.200599998f, 0.200599998f);
@@ -173,7 +154,7 @@ public class MultiplayerController : NetworkBehaviour
     {
         if (!hasAuthority) { return; }
         
-        if (movement == 0 && isGrounded && !crouching && canAttack) //Small punch
+        if (movement == 0 && isGrounded && !crouching && canAttack && isActiveAndEnabled) //Small punch
         {
             attacks.lightPunch();
         }
@@ -190,11 +171,11 @@ public class MultiplayerController : NetworkBehaviour
         
         if (isServer)
         {
-            attacks.RpcObj(obj, false);
+            attacks.RpcObj(obj.GetComponent<NetworkIdentity>(), false);
         }
         else
         {
-            attacks.CmdObj(obj, false);
+            attacks.CmdObj(obj.GetComponent<NetworkIdentity>(), false);
         }
         
     }

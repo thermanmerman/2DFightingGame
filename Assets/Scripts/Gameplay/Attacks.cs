@@ -5,61 +5,44 @@ using System.Collections.Generic;
 
 public class Attacks : NetworkBehaviour
 {
-    private static GameObject weaponHolder;
-    private static GameObject armObj;
+    private GameObject armObj;
     [SerializeField] private static List<GameObject> weapons = new List<GameObject>();
     public GameObject Player;
     private float offset = 0.25f;
-    //public bool isServer;
     public MultiplayerController cont;
-    private Vector3 holderScale;
+    public GameObject weaponHolderPrefab;
+    private GameObject weaponHolder;
+    private static Vector3 holderScale = new Vector3();
 
-    public Attacks()
-    {
-
-    }
     public void init()
     {
-        
+        if (!hasAuthority) { return; }
         if (isServer)
         {
-            weaponHolder = GameObject.Find("WeaponHolder");
-            armObj = weaponHolder.transform.GetChild(0).gameObject;
-            RpcObj(armObj, false);
-            //armObj.SetActive(false);
-
-            for (int i = 0; i < weaponHolder.transform.childCount; i++)
-            {
-                weapons.Add(weaponHolder.transform.GetChild(i).gameObject);
-                //weaponHolder.transform.GetChild(i).gameObject.transform.SetParent(this.transform);
-            }
-
-
-
-
-            armObj.transform.localPosition = Vector3.zero;
-
-            holderScale = weaponHolder.transform.localScale;
+            RpcInstiantiate(weaponHolderPrefab);
         }
-
         else
         {
-            //Player 2 stuff
+            CmdInstantiate(weaponHolderPrefab);
         }
-        
+        armObj = weaponHolder.transform.GetChild(0).gameObject;
 
-        
-/*
-        try
+        armObj.transform.localPosition = Vector3.zero;
+        holderScale = weaponHolder.transform.localScale;
+    }
+
+    [Client]
+    void Update()
+    {
+        if (!hasAuthority) { return; }
+        if (isServer)
         {
-            cont = Player.GetComponent<MultiplayerController>();
-            Debug.Log(cont.gameObject.name);
+            RpcHolder();
         }
-        catch
+        else
         {
-            Debug.Log("well what the fuck");
+            CmdHolder();
         }
-        */
     }
 
 
@@ -69,26 +52,39 @@ public class Attacks : NetworkBehaviour
         cont.canAttack = false;
         if (isServer)
         {
-            RpcObj(armObj, true);
+            Debug.Log(armObj.name);
+            RpcObj(armObj.GetComponent<NetworkIdentity>(), true);
         }
         else
         {
-            CmdObj(armObj, true);
+            CmdObj(armObj.GetComponent<NetworkIdentity>(), true);
         }
         cont.StartCoroutine(cont.disableObj(0.21f, armObj));
         cont.StartCoroutine(cont.canattack(0.21f));
     }
 
     [Command]
-    public void CmdObj(GameObject obj, bool enabling)
+    public void CmdObj(NetworkIdentity obj, bool enabling)
     {
         RpcObj(obj, enabling);
     }
 
     [ClientRpc]
-    public void RpcObj(GameObject obj, bool enabling)
+    public void RpcObj(NetworkIdentity obj, bool enabling)
     {
-        obj.SetActive(enabling);
+        obj.gameObject.SetActive(enabling);
+    }
+
+    [Command]
+    public GameObject CmdInstantiate(GameObject obj)
+    {
+        return RpcInstiantiate(obj);
+    }
+
+    [ClientRpc]
+    public GameObject RpcInstiantiate(GameObject obj)
+    {
+        return Instantiate(obj);
     }
 
     [Command]
@@ -105,15 +101,15 @@ public class Attacks : NetworkBehaviour
 
         if (size.x < 0)
         {
-            weaponHolder.transform.localScale = new Vector3(-holderScale.x, holderScale.y, holderScale.z);
+            weaponHolder.transform.localScale = holderScale;
 
-            weaponHolder.transform.position = new Vector3(position.x - offset, position.y + 0.05f, position.z);
+            weaponHolder.transform.position = new Vector3(position.x - offset, position.y + 0.03f, position.z);
         }
         else
         {
-            weaponHolder.transform.localScale = holderScale;
+            weaponHolder.transform.localScale = new Vector3(-holderScale.x, holderScale.y, holderScale.z);
 
-            weaponHolder.transform.position = new Vector3(position.x + offset, position.y + 0.05f, position.z);
+            weaponHolder.transform.position = new Vector3(position.x + offset, position.y + 0.03f, position.z);
         }
     }
 
