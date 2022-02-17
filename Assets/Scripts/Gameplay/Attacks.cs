@@ -14,6 +14,7 @@ public class Attacks : NetworkBehaviour
     private GameObject weaponHolder;
     private static Vector3 holderScale = new Vector3();
 
+    //Git test
     public void init()
     {
         if (!hasAuthority) { return; }
