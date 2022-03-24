@@ -279,9 +279,7 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 64
-  opponentObj: {fileID: 2849314755084897139, guid: 3e563506a4f78344b84cb076e7ae1735, type: 3}
   movement: 0
-  weapons: []
 --- !u!114 &-2078247652203059565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,9 +294,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  weapons: []
   Player: {fileID: 7151074524298502016}
   cont: {fileID: 3048065998031851908}
-  weaponHolderPrefab: {fileID: 7065167888743798864, guid: b7bf7c27cee3ca341ab4abb8010f062f, type: 3}
+  armObjPre: {fileID: 8517407854539449243, guid: 64d5f81165f2e4345944476da39857b4, type: 3}
+  isAwake: 0
 --- !u!1001 &777126805040763755
 PrefabInstance:
   m_ObjectHideFlags: 0

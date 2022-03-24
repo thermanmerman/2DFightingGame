@@ -6,36 +6,53 @@ using System.Collections.Generic;
 public class Attacks : NetworkBehaviour
 {
     private GameObject armObj;
-    [SerializeField] private static List<GameObject> weapons = new List<GameObject>();
+    [SerializeField] private List<GameObject> weapons = new List<GameObject>();
+    private List<Transform> weaponTransforms = new List<Transform>();
     public GameObject Player;
     private float offset = 0.25f;
     public MultiplayerController cont;
-    public GameObject weaponHolderPrefab;
-    private GameObject weaponHolder;
-    private static Vector3 holderScale = new Vector3();
+    public GameObject armObjPre;
+    private Weapons _weapons;
+    private DisableWeapons disableWeapons;
+    public bool isAwake = false;
 
-    //Git test
     public void init()
     {
-        if (!hasAuthority) { return; }
+        if (!hasAuthority || !isLocalPlayer) { return; }
+        isAwake = true;
+
+        armObj = localSpawnGameObj(armObjPre);
         if (isServer)
         {
-            RpcInstiantiate(weaponHolderPrefab);
+            RpcSpawnGameObj(armObjPre);
         }
         else
         {
-            CmdInstantiate(weaponHolderPrefab);
+            CmdSpawnGameObj(armObjPre);
         }
-        armObj = weaponHolder.transform.GetChild(0).gameObject;
+        
+
+        weapons.Add(armObj); //Adding all weapons in game to a list
+        //MUST ADD ALL WEAPONS TO weapons LIST
+        
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            weaponTransforms.Add(weapons[i].transform); //Gets all weapons' starting transforms (scale is most important here)
+        }
 
         armObj.transform.localPosition = Vector3.zero;
-        holderScale = weaponHolder.transform.localScale;
+
+        _weapons = new Weapons(armObj);
+        disableWeapons = this.gameObject.AddComponent<DisableWeapons>();
     }
 
+
     [Client]
-    void Update()
+    public void Update()
     {
-        if (!hasAuthority) { return; }
+        if (!hasAuthority || !isLocalPlayer) { return; }
+        //if (!isAwake){ Debug.Log("Not awake"); Awake(); }
+        moveWeapons();
         if (isServer)
         {
             RpcHolder();
@@ -46,74 +63,87 @@ public class Attacks : NetworkBehaviour
         }
     }
 
-
     [Client]
     public void lightPunch()
     {
+        if (!isAwake || !isLocalPlayer) { return; }
+
         cont.canAttack = false;
+        _weapons.localEnableArm(true);
         if (isServer)
         {
             Debug.Log(armObj.name);
-            RpcObj(armObj.GetComponent<NetworkIdentity>(), true);
+            _weapons.RpcArm(true, isLocalPlayer);
         }
         else
         {
-            CmdObj(armObj.GetComponent<NetworkIdentity>(), true);
+            _weapons.CmdArm(true, isLocalPlayer);
         }
-        cont.StartCoroutine(cont.disableObj(0.21f, armObj));
+ 
+        disableWeapons.StartCoroutine(disableWeapons.disableArm(0.21f, isServer, _weapons, isLocalPlayer));
         cont.StartCoroutine(cont.canattack(0.21f));
-    }
-
-    [Command]
-    public void CmdObj(NetworkIdentity obj, bool enabling)
-    {
-        RpcObj(obj, enabling);
-    }
-
-    [ClientRpc]
-    public void RpcObj(NetworkIdentity obj, bool enabling)
-    {
-        obj.gameObject.SetActive(enabling);
-    }
-
-    [Command]
-    public GameObject CmdInstantiate(GameObject obj)
-    {
-        return RpcInstiantiate(obj);
-    }
-
-    [ClientRpc]
-    public GameObject RpcInstiantiate(GameObject obj)
-    {
-        return Instantiate(obj);
     }
 
     [Command]
     public void CmdHolder()
     {
+        moveWeapons();
         RpcHolder();
     }
 
     [ClientRpc]
     public void RpcHolder()
     {
+        if (isLocalPlayer) { return; }
+        moveWeapons();
+    }
+
+    private void moveWeapons()
+    {
+        if (!isAwake) { return; }
         Vector3 position = Player.transform.position;
         Vector3 size = Player.transform.localScale;
 
         if (size.x < 0)
         {
-            weaponHolder.transform.localScale = holderScale;
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                weapons[i].transform.localScale = new Vector3(weaponTransforms[i].localScale.x, -weaponTransforms[i].localScale.y, weaponTransforms[i].localScale.z);
 
-            weaponHolder.transform.position = new Vector3(position.x - offset, position.y + 0.03f, position.z);
+                weapons[i].transform.position = new Vector3(position.x - offset, position.y + 0.03f, position.z);
+            }
         }
         else
         {
-            weaponHolder.transform.localScale = new Vector3(-holderScale.x, holderScale.y, holderScale.z);
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                weapons[i].transform.localScale = new Vector3(weaponTransforms[i].localScale.x, weaponTransforms[i].localScale.y, weaponTransforms[i].localScale.z);
 
-            weaponHolder.transform.position = new Vector3(position.x + offset, position.y + 0.03f, position.z);
+                weapons[i].transform.position = new Vector3(position.x + offset, position.y + 0.03f, position.z);
+            }
         }
     }
 
+    private GameObject localSpawnGameObj(GameObject item)
+    {
+        GameObject obj = Instantiate(item);
+        //NetworkServer.Spawn(obj);
+        return obj;
+    }
 
+    [Command]
+    private void CmdSpawnGameObj(GameObject item)
+    {
+        localSpawnGameObj(item);
+        RpcSpawnGameObj(item);   
+    }
+
+    [ClientRpc]
+    private void RpcSpawnGameObj(GameObject item)
+    {
+        if (isLocalPlayer) { return; }
+        localSpawnGameObj(item);
+        NetworkServer.Spawn(item);
+    }
     
 }

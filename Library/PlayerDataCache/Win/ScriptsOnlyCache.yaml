@@ -17,8 +17,6 @@ ScriptsOnlyBuild:
     Mirror.Components.dll:
     - Mirror.NetworkTransform
     - Mirror.NetworkTransformChild
-    Mirror.Editor.dll:
-    - Mirror.NetworkBehaviourInspector
     Mirror.dll:
     - Mirror.NetworkIdentity
     - Mirror.NetworkManager
@@ -249,33 +247,33 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 7908}
     - Class: 114
-      Script: {instanceID: 8016}
+      Script: {instanceID: 8018}
     - Class: 114
-      Script: {instanceID: 8054}
+      Script: {instanceID: 8056}
     - Class: 114
-      Script: {instanceID: 8074}
+      Script: {instanceID: 8076}
     - Class: 114
-      Script: {instanceID: 8130}
+      Script: {instanceID: 8132}
     - Class: 114
-      Script: {instanceID: 8222}
+      Script: {instanceID: 8224}
     - Class: 114
-      Script: {instanceID: 8546}
+      Script: {instanceID: 8548}
     - Class: 114
-      Script: {instanceID: 8584}
+      Script: {instanceID: 8586}
     - Class: 114
-      Script: {instanceID: 8648}
+      Script: {instanceID: 8650}
     - Class: 114
-      Script: {instanceID: 8914}
+      Script: {instanceID: 8916}
     - Class: 114
-      Script: {instanceID: 8970}
+      Script: {instanceID: 8972}
     - Class: 114
-      Script: {instanceID: 9192}
+      Script: {instanceID: 9194}
     - Class: 114
-      Script: {instanceID: 9358}
+      Script: {instanceID: 9360}
     - Class: 114
-      Script: {instanceID: 9544}
+      Script: {instanceID: 9546}
     - Class: 114
-      Script: {instanceID: 9668}
+      Script: {instanceID: 9670}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -1211,7 +1209,7 @@ ScriptsOnlyBuild:
     className: hit2arm
   - hash:
       serializedVersion: 2
-      Hash: 14817e5182a8de375e794ef50a07b1d8
+      Hash: b2db52a5be92d06d5c3f50110a2d9d51
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Attacks
@@ -2105,7 +2103,7 @@ ScriptsOnlyBuild:
     className: DistanceInterestManagement
   - hash:
       serializedVersion: 2
-      Hash: 1a6be63165bf3440d18b08ec16f0bb0a
+      Hash: 3add88ef72248d7b5b95a47938392e31
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MultiplayerController

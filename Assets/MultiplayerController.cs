@@ -10,10 +10,6 @@ public class MultiplayerController : NetworkBehaviour
     private PlayerControls controls;
     private Rigidbody2D rb;
     private Vector3 startScale;
-    private GameObject armObj;
-    private float offset = 0.2f;
-    private Vector3 holderScale;
-    private GameObject weaponHolder;
     private Attacks attacks;
 
     [Header("Booleans")]
@@ -26,14 +22,11 @@ public class MultiplayerController : NetworkBehaviour
     public float movementSpeed = 2;
     public float distance = 0.16f;
     public int jumpStrength = 4;
-    public LayerMask ground;
-    public GameObject opponentObj;
-    
+    public LayerMask ground;    
 
     [Space]
     [Header("Static values")]
     [SerializeField] private float movement = new float();
-    [SerializeField] List<GameObject> weapons = new List<GameObject>();
     
 
     private PlayerControls Controls
@@ -47,6 +40,7 @@ public class MultiplayerController : NetworkBehaviour
 
     public override void OnStartAuthority()
     {
+
         controls.Player.Movement.performed += ctx => movement = ctx.ReadValue<float>();
         controls.Player.Movement.canceled += _ => movement = 0;
 
@@ -62,24 +56,14 @@ public class MultiplayerController : NetworkBehaviour
     void Start()
     {
         if (!hasAuthority) { return; }
+
+        attacks = this.gameObject.GetComponent<Attacks>();
+        attacks.init();
+    
         rb = GetComponent<Rigidbody2D>();
 
         startScale = transform.localScale;
 
-        attacks = GetComponent<Attacks>();
-        attacks.init();
-        
-        /*
-        if (isServer)
-        {
-            attacks.isServer = true;
-        }
-        else
-        {
-            attacks.isServer = false;
-        }
-        */
-        
     }
 
     private void OnEnable() => Controls.Enable();
@@ -89,7 +73,7 @@ public class MultiplayerController : NetworkBehaviour
     private void Update()
     {
         if(!hasAuthority) { return; }
-        
+        attacks.Update();
         if (movement < 0) //If moving left
         {
             //transform.localScale = new Vector3(-0.200599998f, 0.200599998f, 0.200599998f);
@@ -164,21 +148,6 @@ public class MultiplayerController : NetworkBehaviour
         }
     }
 
-    [Client]
-    public IEnumerator disableObj(float time, GameObject obj)
-    {
-        yield return new WaitForSeconds(time);
-        
-        if (isServer)
-        {
-            attacks.RpcObj(obj.GetComponent<NetworkIdentity>(), false);
-        }
-        else
-        {
-            attacks.CmdObj(obj.GetComponent<NetworkIdentity>(), false);
-        }
-        
-    }
 
     [Client]
     public IEnumerator canattack(float time)
@@ -187,7 +156,10 @@ public class MultiplayerController : NetworkBehaviour
         canAttack = true;
     }
 
-   
+   public bool getAuthority()
+   {
+       return hasAuthority;
+   }
     
     
 }
