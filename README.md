@@ -16,4 +16,4 @@ Controls:
     
 Description:
 
-I started making this game toward the end of my junior year. I'm pretty proud of it despite its unfinished nature. I love the simple two-dimensional shapes in contrast with the extremely detailed appendages. I asked the Super Smash Bros. club at my school to test it and they had a lot of fun with it. I never finished the multiplayer part because networking is something I need to learn more about and work on, but by playing a previous version you will get a better sense of how the game works.
+I started making the 2D Fighting Game toward the end of my junior year. I’m like how the simple two-dimensional shapes contrast with the extremely detailed appendages. I asked the Super Smash Bros. club at my school to test the game and they had a lot of fun with it. I never finished the multiplayer part because networking is something I need to learn more about, but by playing a previous version you can get a better sense of how the game works.
