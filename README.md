@@ -16,6 +16,4 @@ Controls:
     
 Description:
 
-I started making this game toward the end of my junior year of high school. I never came up with a name for it, but I'm pretty proud of it despite its unfinished nature.
-Eventually I wanted to get some play testers, so I took it to the Super Smash Bros. club in my school and they had a lot of fun with it.
-I also never finished the multiplayer part because networking is really hard and that is definitely reflected in my commit messages. I'm not too sure of the extent to which it works after I started working on the networking, so maybe revert to a previous version if you want to give it a try.
+I started making this game toward the end of my junior year. I'm pretty proud of it despite its unfinished nature. I love the simple two-dimensional shapes in contrast with the extremely detailed appendages. I asked the Super Smash Bros. club at my school to test it and they had a lot of fun with it. I never finished the multiplayer part because networking is something I need to learn more about and work on, but by playing a previous version you will get a better sense of how the game works.
